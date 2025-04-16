@@ -82,7 +82,7 @@ function App() {
                 <Route path="stylist/:id" element={<StylistDetailPage />} />
                 <Route path="book/:stylistId" element={<BookingForm />} />
                 <Route path="account" element={<AccountPage />} />
-                <Route path="*" element={<NotFound />} />
+                <Route path="*" element={<HomePage />} />
               </Route>
             </Routes>
           </Router>
