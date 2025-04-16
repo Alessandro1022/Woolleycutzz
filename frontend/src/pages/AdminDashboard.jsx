@@ -41,10 +41,10 @@ import PeopleIcon from '@mui/icons-material/People';
 import EventIcon from '@mui/icons-material/Event';
 import { format } from 'date-fns';
 import { sv } from 'date-fns/locale';
+import { useAuth } from '../contexts/AuthContext';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(3),
-  marginBottom: theme.spacing(3),
+  padding: theme.spacing(4),
   background: 'linear-gradient(135deg, #FFFFFF 0%, #FDF6E3 100%)',
   border: '1px solid #D4AF37',
   borderRadius: 16,
@@ -96,6 +96,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -107,6 +108,8 @@ const AdminDashboard = () => {
     service: '',
     status: '',
   });
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
     loadBookings();
@@ -207,15 +210,11 @@ const AdminDashboard = () => {
   };
 
   const formatDate = (dateString) => {
-    try {
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) {
-        return 'Ogiltigt datum';
-      }
-      return date.toLocaleDateString('sv-SE');
-    } catch (error) {
-      return 'Ogiltigt datum';
-    }
+    return new Date(dateString).toLocaleDateString('sv-SE', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
   };
 
   const formatTime = (timeString) => {
@@ -248,6 +247,18 @@ const AdminDashboard = () => {
       pendingBookings,
       cancelledBookings,
     };
+  };
+
+  const handleDeleteBooking = (bookingId) => {
+    try {
+      const updatedBookings = bookings.filter(booking => booking.id !== bookingId);
+      localStorage.setItem('bookings', JSON.stringify(updatedBookings));
+      setBookings(updatedBookings);
+      setOpenDialog(false);
+    } catch (err) {
+      setError('Kunde inte ta bort bokningen');
+      console.error('Error deleting booking:', err);
+    }
   };
 
   if (loading) {
@@ -362,22 +373,13 @@ const AdminDashboard = () => {
                     <TableCell>{formatTime(booking.time)}</TableCell>
                     <TableCell>{booking.service}</TableCell>
                     <TableCell>
-                      <Select
-                        value={booking.status}
-                        onChange={(e) => handleStatusChange(booking.id, e.target.value)}
-                        size="small"
-                      >
-                        <MenuItem value="Bekräftad">Bekräftad</MenuItem>
-                        <MenuItem value="Väntar">Väntar</MenuItem>
-                        <MenuItem value="Avbokad">Avbokad</MenuItem>
-                        <MenuItem value="Slutförd">Slutförd</MenuItem>
-                      </Select>
-                    </TableCell>
-                    <TableCell>
                       <IconButton onClick={() => handleEdit(booking)} size="small">
                         <EditIcon />
                       </IconButton>
-                      <IconButton onClick={() => handleDelete(booking.id)} size="small">
+                      <IconButton onClick={() => {
+                        setSelectedBooking(booking);
+                        setOpenDialog(true);
+                      }} size="small">
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>
@@ -453,6 +455,23 @@ const AdminDashboard = () => {
             <Button onClick={() => setEditingBooking(null)}>Avbryt</Button>
             <Button onClick={handleSaveEdit} variant="contained" color="primary">
               Spara
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+          <DialogTitle>Bekräfta borttagning</DialogTitle>
+          <DialogContent>
+            Är du säker på att du vill ta bort denna bokning?
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenDialog(false)}>Avbryt</Button>
+            <Button
+              onClick={() => handleDeleteBooking(selectedBooking?.id)}
+              color="error"
+              variant="contained"
+            >
+              Ta bort
             </Button>
           </DialogActions>
         </Dialog>
