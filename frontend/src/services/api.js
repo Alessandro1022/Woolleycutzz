@@ -15,18 +15,18 @@ const mockStylists = {
     },
     services: [
       {
-        id: '1',
-        name: 'Herrklippning',
-        price: 300,
+        id: 1,
+        name: "Herrklippning",
+        price: 150,
         duration: 30,
-        description: 'Professionell herrklippning med skäggtrimning'
+        description: "Professionell herrklippning anpassad efter dina önskemål"
       },
       {
-        id: '2',
-        name: 'Herrklippning med skägg',
-        price: 400,
+        id: 2,
+        name: "Herrklippning med skägg",
+        price: 200,
         duration: 45,
-        description: 'Herrklippning med full skäggvård'
+        description: "Komplett styling med både hår- och skäggklippning"
       }
     ],
     location: 'Kristinedal träningcenter'
