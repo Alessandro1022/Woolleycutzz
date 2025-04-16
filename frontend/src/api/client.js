@@ -1,9 +1,8 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:4001';
-
+// Use relative paths for API calls
 const client = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: '/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -44,7 +43,7 @@ const mockStylist = {
 // API functions with fallback to mock data
 export const getStylist = async (id) => {
   try {
-    const response = await client.get(`/api/stylists/${id}`);
+    const response = await client.get(`/stylists/${id}`);
     return response.data;
   } catch (error) {
     console.warn('Network error or server not responding, using mock data fallback');
@@ -54,7 +53,7 @@ export const getStylist = async (id) => {
 
 export const getStylists = async () => {
   try {
-    const response = await client.get('/api/stylists');
+    const response = await client.get('/stylists');
     return response.data;
   } catch (error) {
     console.warn('Network error or server not responding, using mock data fallback');
@@ -64,7 +63,7 @@ export const getStylists = async () => {
 
 export const createBooking = async (bookingData) => {
   try {
-    const response = await client.post('/api/bookings', bookingData);
+    const response = await client.post('/bookings', bookingData);
     return response.data;
   } catch (error) {
     console.warn('Network error or server not responding, using mock data fallback');

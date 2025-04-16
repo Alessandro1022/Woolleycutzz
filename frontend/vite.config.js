@@ -13,6 +13,13 @@ export default defineConfig({
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Content-Security-Policy': "default-src 'self' http://localhost:4001; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' http://localhost:4001 ws://localhost:4001;"
+    },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:4001',
+        changeOrigin: true,
+        secure: false,
+      },
     }
   },
   resolve: {
@@ -47,4 +54,5 @@ export default defineConfig({
       target: 'es2020',
     },
   },
+  publicDir: 'public',
 }); 
