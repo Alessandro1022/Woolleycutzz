@@ -1,5 +1,5 @@
 import React from 'react';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider } from './contexts/AuthContext';
@@ -7,7 +7,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 // Pages
-import Home from './pages/Home';
+import HomePage from './pages/HomePage';
 import BookingForm from './pages/BookingForm';
 import BookingConfirmation from './pages/BookingConfirmation';
 import AdminLogin from './pages/AdminLogin';
@@ -55,34 +55,37 @@ const theme = createTheme({
   },
 });
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Layout />,
-    children: [
-      { index: true, element: <Home /> },
-      { path: 'booking', element: <BookingForm /> },
-      { path: 'booking-confirmation', element: <BookingConfirmation /> },
-      { path: 'admin/login', element: <AdminLogin /> },
-      { path: 'admin/dashboard', element: <PrivateRoute requireAdmin><AdminDashboard /></PrivateRoute> },
-      { path: 'customer/login', element: <CustomerLogin /> },
-      { path: 'customer/dashboard', element: <CustomerDashboard /> },
-      { path: 'stylists', element: <StylistGrid /> },
-      { path: 'stylist/:stylistId', element: <StylistDetailPage /> },
-      { path: 'book/:stylistId', element: <BookingForm /> },
-      { path: 'account', element: <AccountPage /> },
-      { path: '*', element: <NotFound /> },
-    ],
-  },
-]);
-
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale="sv">
         <CssBaseline />
         <AuthProvider>
-          <RouterProvider router={router} />
+          <Router>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<HomePage />} />
+                <Route path="booking" element={<BookingForm />} />
+                <Route path="booking-confirmation" element={<BookingConfirmation />} />
+                <Route path="admin/login" element={<AdminLogin />} />
+                <Route 
+                  path="admin/dashboard" 
+                  element={
+                    <PrivateRoute requireAdmin>
+                      <AdminDashboard />
+                    </PrivateRoute>
+                  } 
+                />
+                <Route path="customer/login" element={<CustomerLogin />} />
+                <Route path="customer/dashboard" element={<CustomerDashboard />} />
+                <Route path="stylists" element={<StylistGrid />} />
+                <Route path="stylist/:id" element={<StylistDetailPage />} />
+                <Route path="book/:stylistId" element={<BookingForm />} />
+                <Route path="account" element={<AccountPage />} />
+                <Route path="*" element={<NotFound />} />
+              </Route>
+            </Routes>
+          </Router>
         </AuthProvider>
       </LocalizationProvider>
     </ThemeProvider>
