@@ -67,14 +67,16 @@ const AdminLogin = () => {
     setError(null);
 
     try {
+      // Kontrollera inloggningsuppgifter
       if (formData.email === 'admin@woolley.se' && formData.password === 'admin123') {
+        // Logga in användaren
         await login({ 
           email: formData.email, 
           role: 'admin',
           name: 'Admin'
         });
         
-        // Hämta den ursprungliga destinationen från location.state
+        // Hämta den ursprungliga destinationen eller gå till dashboard
         const from = location.state?.from || '/admin/dashboard';
         navigate(from, { replace: true });
       } else {
@@ -92,7 +94,7 @@ const AdminLogin = () => {
       <Box sx={{ py: 8 }}>
         <StyledPaper>
           <StyledTypography variant="h4">
-            Admin Login
+            Admin Login - Woolley Cutzz
           </StyledTypography>
 
           {error && (
