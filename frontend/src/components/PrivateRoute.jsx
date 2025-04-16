@@ -7,15 +7,16 @@ const PrivateRoute = ({ children, requireAdmin = false }) => {
   const { user, isAdmin } = useAuth();
 
   if (!user) {
-    // Om ingen användare är inloggad
-    return <Navigate to="/admin/login" state={{ from: location }} replace />;
+    // Om ingen användare är inloggad, omdirigera till inloggningssidan
+    return <Navigate to="/admin/login" state={{ from: location.pathname }} replace />;
   }
 
   if (requireAdmin && !isAdmin) {
-    // Om admin krävs men användaren inte är admin
-    return <Navigate to="/admin/login" state={{ from: location }} replace />;
+    // Om admin krävs men användaren inte är admin, omdirigera till inloggningssidan
+    return <Navigate to="/admin/login" state={{ from: location.pathname }} replace />;
   }
 
+  // Om allt är ok, visa komponenten
   return children;
 };
 

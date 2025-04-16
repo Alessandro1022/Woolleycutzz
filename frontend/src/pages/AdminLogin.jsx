@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Container,
   Box,
@@ -44,6 +44,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
@@ -66,10 +67,16 @@ const AdminLogin = () => {
     setError(null);
 
     try {
-      // Mock login for demonstration
       if (formData.email === 'admin@woolley.se' && formData.password === 'admin123') {
-        await login({ email: formData.email, role: 'admin' });
-        navigate('/admin-dashboard');
+        await login({ 
+          email: formData.email, 
+          role: 'admin',
+          name: 'Admin'
+        });
+        
+        // Hämta den ursprungliga destinationen från location.state
+        const from = location.state?.from || '/admin/dashboard';
+        navigate(from, { replace: true });
       } else {
         throw new Error('Felaktig e-post eller lösenord');
       }
