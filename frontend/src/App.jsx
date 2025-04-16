@@ -1,11 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider } from './contexts/AuthContext';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { Navigate } from 'react-router-dom';
 
 // Pages
 import Home from './pages/Home';
@@ -65,15 +64,8 @@ const router = createBrowserRouter([
       { path: 'booking', element: <BookingForm /> },
       { path: 'booking-confirmation', element: <BookingConfirmation /> },
       { path: 'admin/login', element: <AdminLogin /> },
+      { path: 'admin/dashboard', element: <PrivateRoute requireAdmin><AdminDashboard /></PrivateRoute> },
       { path: 'customer/login', element: <CustomerLogin /> },
-      {
-        path: 'admin',
-        element: (
-          <PrivateRoute requireAdmin>
-            <AdminDashboard />
-          </PrivateRoute>
-        ),
-      },
       { path: 'customer/dashboard', element: <CustomerDashboard /> },
       { path: 'stylists', element: <StylistGrid /> },
       { path: 'stylist/:stylistId', element: <StylistDetailPage /> },
@@ -82,12 +74,7 @@ const router = createBrowserRouter([
       { path: '*', element: <NotFound /> },
     ],
   },
-], {
-  future: {
-    v7_startTransition: true,
-    v7_relativeSplatPath: true,
-  },
-});
+]);
 
 function App() {
   return (
